@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+url="http://158.69.76.135/level1.php"
+id=2055
+fake_key=$RANDOM
+cookie="HoldTheDoor=$fake_key"
+form_1="id=$id"
+form_2="holdthedoor=submit"
+form_3="key=$fake_key"
+
+cmd="curl -sX POST -F $form_1 -F $form_2 -F $form_3 -b $cookie $url"
+
+case $1 in
+	-v)
+		$cmd \
+			| grep $id -A 2 \
+			| cut -f1 -d" " \
+			| tr "\n" "\t"	\
+			; echo ""
+		;;
+	*)
+		$cmd
+		;;
+esac

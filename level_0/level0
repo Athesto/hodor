@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#set -x
+url="http://158.69.76.135/level0.php"
+id=2055
+form_1="id=$id"
+form_2="holdthedoor=Submit"
+cmd="curl -sX POST -F $form_1 -F $form_2 $url"
+
+case $1 in
+	-v)
+		$cmd \
+			| grep $id -A 2 \
+			| cut -f1 -d" " \
+			| tr "\n" "\t"; \
+			echo
+		;;
+	*)
+		$cmd
+		;;
+esac
+
+#option2
+#data="id=$id&holdthedoor=Submit"
+#cmd="curl -sX POST -d $data $url"
+#$cmd
